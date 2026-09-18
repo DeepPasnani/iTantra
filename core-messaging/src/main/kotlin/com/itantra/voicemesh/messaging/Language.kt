@@ -1,11 +1,12 @@
 package com.itantra.voicemesh.messaging
 
 /**
- * The nine target Indian languages (English dropped from scope: AI4Bharat's ASR/TTS
- * models — this project's chosen STT/TTS source — don't cover it, see chat notes).
- * [code] is the ISO 639-1 tag the STT/TTS engines are keyed by; [wireId] is the single
- * byte carried on the network so language metadata does not cost more than one byte
- * on the wire.
+ * The ten target languages from the problem statement (Hindi, Gujarati, Marathi,
+ * Kannada, Malayalam, Tamil, Telugu, Odia, Bengali, English). [code] is the ISO 639-1
+ * tag the STT/TTS engines are keyed by; [wireId] is the single byte carried on the
+ * network so language metadata does not cost more than one byte on the wire — new
+ * entries must only ever append with a new id, never reuse or renumber an existing
+ * one, since that would break wire compatibility with already-deployed nodes.
  */
 enum class Language(val code: String, val displayName: String, val wireId: Byte) {
     HINDI("hi", "Hindi", 1),
@@ -17,6 +18,7 @@ enum class Language(val code: String, val displayName: String, val wireId: Byte)
     TELUGU("te", "Telugu", 7),
     ODIA("or", "Odia", 8),
     BENGALI("bn", "Bengali", 9),
+    ENGLISH("en", "English", 10),
     ;
 
     companion object {

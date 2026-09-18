@@ -8,3 +8,19 @@ local.properties
 captures/
 .cxx/
 .DS_Store
+
+# Release signing — never commit the keystore or its passwords.
+*.keystore
+*.jks
+itantra-release.keystore.password.txt
+
+# Downloaded STT models — the Vosk zips are tens of MB and the IndicConformer int8
+# ONNX exports are ~137MB EACH, over GitHub's 100MB per-file limit for a normal (non
+# Git-LFS) push. These are build-time inputs downloaded per the README, not source;
+# they belong in the release APK binary, never in a commit.
+app/src/main/assets/models/
+
+# Languages temporarily out of the demo build (moved here, not deleted, from
+# app/src/main/assets/models/ — see the commented-out map entries in
+# VoskSpeechRecognizer/IndicConformerSpeechRecognizer for how to bring one back).
+models-disabled/

@@ -13,11 +13,11 @@ import org.vosk.android.StorageService
  * Real offline STT using Vosk/Kaldi. Only wired up for the languages that actually
  * have a ready-made lightweight Vosk model (spec §11 requires the engine choice to be
  * benchmarked per language, not assumed — this session only gets as far as "wired up
- * and buildable", not "benchmarked"): Hindi, Gujarati, Telugu. The other six languages
- * in scope (Marathi, Kannada, Malayalam, Tamil, Odia, Bengali) have no Vosk model —
- * see [IndicConformerSpeechRecognizer] for the intended eventual replacement covering
- * them. See this session's chat notes for exact model download URLs and where to
- * place the unpacked files under `app/src/main/assets/models/vosk/<code>/`.
+ * and buildable", not "benchmarked"): Hindi, Gujarati, Telugu, English. The other six
+ * languages in scope (Marathi, Kannada, Malayalam, Tamil, Odia, Bengali) have no Vosk
+ * model — see [IndicConformerSpeechRecognizer] for the intended eventual replacement
+ * covering them. See this session's chat notes for exact model download URLs and
+ * where to place the unpacked files under `app/src/main/assets/models/vosk/<code>/`.
  *
  * Each [Language]'s model is loaded once and cached: Kaldi model load is a
  * multi-second operation on a phone and must not happen on every PTT press.
@@ -103,7 +103,11 @@ class VoskSpeechRecognizer(private val context: Context) : SpeechRecognizer {
         private val ASSET_FOLDER_BY_LANGUAGE = mapOf(
             Language.HINDI to "models/vosk/hi",
             Language.GUJARATI to "models/vosk/gu",
-            Language.TELUGU to "models/vosk/te",
+            Language.ENGLISH to "models/vosk/en",
+            // Telugu commented out for a smaller demo-video build — its model was moved
+            // to `models-disabled/vosk/te` (not deleted). To restore: move it back to
+            // `app/src/main/assets/models/vosk/te/` and uncomment the line below.
+            // Language.TELUGU to "models/vosk/te",
         )
 
         val SUPPORTED_LANGUAGES: Set<Language> = ASSET_FOLDER_BY_LANGUAGE.keys

@@ -47,14 +47,14 @@ class StubSpeechSynthesizer(private val onSpeak: (Message) -> Unit) : SpeechSynt
 
 /**
  * Sends a language to [VoskSpeechRecognizer] when a real model is wired up for it
- * (Hindi, Gujarati, Telugu), otherwise falls back to [IndicConformerSpeechRecognizer]
- * — the chosen eventual engine for the remaining six (Marathi, Kannada, Malayalam,
- * Tamil, Odia, Bengali), currently unimplemented (spec §16: don't claim STT works for
- * a language that has no verified engine).
+ * (Hindi, Gujarati, Telugu, English), otherwise falls back to
+ * [IndicConformerSpeechRecognizer] for the remaining six (Marathi, Kannada, Malayalam,
+ * Tamil, Odia, Bengali) — wired up and buildable, but not yet benchmarked on real
+ * hardware (spec §16: don't claim STT works for a language beyond what's been verified).
  */
 class LanguageRoutingSpeechRecognizer(
     private val vosk: VoskSpeechRecognizer,
-    private val fallback: SpeechRecognizer = IndicConformerSpeechRecognizer(),
+    private val fallback: SpeechRecognizer,
 ) : SpeechRecognizer {
     private var lastUsedWasVosk = false
 

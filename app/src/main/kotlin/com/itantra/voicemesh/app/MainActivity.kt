@@ -34,11 +34,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.itantra.voicemesh.app.mesh.MeshSession
+import com.itantra.voicemesh.app.speech.IndicConformerSpeechRecognizer
 import com.itantra.voicemesh.app.speech.LanguageRoutingSpeechRecognizer
 import com.itantra.voicemesh.app.speech.VoskSpeechRecognizer
 import com.itantra.voicemesh.messaging.Language
 import com.itantra.voicemesh.messaging.NodeId
 import com.itantra.voicemesh.messaging.Priority
+
+/**
+ * Languages with a model actually bundled in this build — see the commented-out entries
+ * in [VoskSpeechRecognizer] and [IndicConformerSpeechRecognizer] for the other seven,
+ * trimmed for a smaller demo-video APK. Restore by switching this back to
+ * `Language.entries` once those models are back under `app/src/main/assets/`.
+ */
+private val ACTIVE_DEMO_LANGUAGES = listOf(Language.HINDI, Language.GUJARATI, Language.ENGLISH)
 
 /**
  * Minimal demo/skeleton UI for the transport+reliability core built this session
@@ -89,7 +98,12 @@ private fun VoiceMeshScreen(session: MeshSession, onRequestPermissions: ((Array<
     var languageMenuExpanded by remember { mutableStateOf(false) }
     var urgent by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val recognizer = remember { LanguageRoutingSpeechRecognizer(vosk = VoskSpeechRecognizer(context)) }
+    val recognizer = remember {
+        LanguageRoutingSpeechRecognizer(
+            vosk = VoskSpeechRecognizer(context),
+            fallback = IndicConformerSpeechRecognizer(context),
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Node ID: ${session.localNodeId}", style = MaterialTheme.typography.titleMedium)
@@ -100,7 +114,11 @@ private fun VoiceMeshScreen(session: MeshSession, onRequestPermissions: ((Array<
         Row(modifier = Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             TextButton(onClick = { languageMenuExpanded = true }) { Text("Language: ${selectedLanguage.displayName}") }
             DropdownMenu(expanded = languageMenuExpanded, onDismissRequest = { languageMenuExpanded = false }) {
-                Language.entries.forEach { language ->
+                // Restricted to the languages with models actually bundled in this demo
+                // build — see VoskSpeechRecognizer/IndicConformerSpeechRecognizer for
+                // how to restore the other seven; switch this back to Language.entries
+                // once they're back in.
+                ACTIVE_DEMO_LANGUAGES.forEach { language ->
                     DropdownMenuItem(text = { Text(language.displayName) }, onClick = {
                         selectedLanguage = language
                         languageMenuExpanded = false
